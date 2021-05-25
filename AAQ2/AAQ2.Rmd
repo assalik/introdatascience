@@ -1,0 +1,110 @@
+---
+title: "Alternative Assessment 2"
+author: "Irfan Abidin As Salik Bin Noor Riza Al Jeffery (17204593)"
+date: "5/24/2021"
+output: html_document
+---
+
+# a) Interprating the confusion matrix
+![](Q1.png)
+
+
+In this example, the model correctly predicted for *Tested Positive* is *120 times* and
+*incorrectly predicted* it *15 times*. The model correctly predicted for *Tested Negative*
+is 50 times and *incorrectly predicted* it *10 times*.
+
+### The following can be computed from this confusion matrix:
+  * The model made __170__ correct predictions __(120 + 50)__.
+  * The model made __25__ incorrect predictions __(15 + 10)__.
+  * There are __195__ total scored cases __(120 + 15 + 10 + 50)__.
+  * The error rate is __25/195__ = __0.1282__.
+  * The overall accuracy rate is __170/195__ = __0.8718__.
+ 
+# b) EDA and Codebook
+## EDA
+
+_Description_
+
+- An experiment was conducted to measure and compare the effectiveness of various feed supplements on the growth rate of chickens.
+
+_Format_
+
+- A data frame with _71 observations_ on the following _2 variables_.
+
+    *weight* = a numeric variable giving the chick weight.
+
+    *feed* = a factor giving the feed type.
+    
+_Details_
+- Newly hatched chicks were randomly allocated into six groups, and each group was given a different feed supplement. Their weights in grams after six weeks are given along with feed types.
+
+*Dataset of Chicken Weight by Feed Type(first 6 data)*
+```{r, echo=FALSE}
+data(chickwts)
+head(chickwts)
+```
+
+```{r, echo=FALSE}
+boxplot(weight ~ feed, data = chickwts, col = "yellow",
+    varwidth = TRUE, notch = FALSE, main = "Chicken Weights by Feed Type", ylab = "Weight at six weeks (gm)")
+```
+
+## Codebook
+-Categorical Variables
+```{r, echo=FALSE}
+table(chickwts$feed)
+```
+- The summary for each feed type.
+```{r, echo=FALSE}
+by(chickwts$weight, chickwts$feed, summary)
+```
+- The standard deviation of the weights grouped by feed type.
+```{r,echo=FALSE}
+by(chickwts$weight, chickwts$feed, mean)
+```
+
+***
+# c) Demonstration  of dplyr for data manipulation
+
+```{r, echo=FALSE}
+Palestine <- read.csv("C://Users//USER//Downloads//Palestine Body Count.csv")
+Palestine <- head(Palestine,10)
+print(Palestine)
+```
+## i) Changing the existing column name.
+```{r}
+Palestine1 <- dplyr :: rename(Palestine, "Palestinians_Killed" = Palestinians.Killed, "Israelis_Killed" = Israelis.Killed)
+```
+  + Changed the column name from _Palestinians.Killed_ to _Palestinians_Killed_
+  + Changed the column name from _Israelis.Killed_ to _Israelis_Killed_
+  + This changes used _(dplyr::rename(dataframe,existing.name = new.name))_
+
+## ii) Pick rows based on their values.
+```{r}
+dplyr::filter(Palestine1, as.numeric(Palestinians_Killed) > 100)
+```
+  + Picked the row with Palestinians_Killed which are more than 100 by using _(dplyr::filter(dataframe, condition))_
+
+## iii) Add new columns to a data frame.
+```{r}
+Palestine2 <- dplyr::mutate(Palestine1, Palestinian_Injured = as.numeric(Palestinians_Killed)*2)
+```
+  + Added a new columns named "Palestinian_Injured" and the data are (Palestinians_Killed*2)
+  + by using _(dplyr::mutate(dataframe, new.variable = choosed.variable*2))_
+
+## iv) Combine data across two or more data frames
+```{r, echo=FALSE}
+PalestineCombine <- read.csv("C://Users//USER//Downloads//CombineDataFrame.csv")
+PalestineCombine <- head(PalestineCombine,10)
+```
+```{r}
+dplyr::bind_cols(Palestine2, PalestineCombine)
+```
+  + Combined 2 set of dataframe (Palestine2) & (PalestineCombine) into one dataframe by using _(dplyr::bind_cols(dataframe1, dataframe2))_
+
+
+
+
+
+
+
